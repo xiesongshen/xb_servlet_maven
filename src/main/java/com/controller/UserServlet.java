@@ -23,6 +23,7 @@ public class UserServlet extends BaseServlet {
     private UserService userService = new UserService();
 
     public void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String username = request.getParameter("username");
         username = username == null ? "" : username;
         String pageStr = request.getParameter("page");
