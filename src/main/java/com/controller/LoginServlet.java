@@ -51,11 +51,12 @@ public class LoginServlet extends BaseServlet {
                 return;
             } else {
                 //把登录用户放入session中
-                session.setAttribute(SysConstant.SESSION_LOGIN_USER,result);
+                session.setAttribute(SysConstant.SESSION_LOGIN_USER, result);
 
                 //过期时间（单位是秒）
                 //session.setMaxInactiveInterval(60*30);
 
+                request.setAttribute("loginUser", result);
                 //登录成功，跳转到主界面
                 request.getRequestDispatcher("/html/common/home.jsp").forward(request, response);
                 return;

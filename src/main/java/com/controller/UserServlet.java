@@ -1,8 +1,12 @@
 package com.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.entity.Page;
 import com.entity.User;
+import com.service.DeptService;
 import com.service.UserService;
+import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @auth admin
@@ -21,6 +26,7 @@ import java.util.List;
 public class UserServlet extends BaseServlet {
 
     private UserService userService = new UserService();
+    private DeptService deptService = new DeptService();
 
     /*
      * @description 查询用户（分页+查询条件）
@@ -78,6 +84,45 @@ public class UserServlet extends BaseServlet {
         //注册成功，跳转到登录页面
         response.sendRedirect("/index.jsp");
 
+    }
+
+    /*
+     * @description 查看用户详情
+     * @author admin
+     * @date 2020/3/19
+     * @param [request, response]
+     * @return void
+     */
+    public void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+        User user = userService.getUserById(Integer.valueOf(id));
+        request.setAttribute("user", user);
+        request.setAttribute("deptList", deptService.listAll());
+        request.getRequestDispatcher("/html/user/detail.jsp").forward(request, response);
+    }
+
+    /*
+     * @description 修改用户信息
+     * @author admin
+     * @date 2020/3/19
+     * @param [request, response]
+     * @return void
+     */
+    public void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
+        Map<String, String[]> map = request.getParameterMap();
+
+        User user = new User();
+        //org.apache.commons.beanutils.BeanUtils;
+        BeanUtils.populate(user, map);
+
+        User user2 = userService.getUserById(user.getId());
+        //复制旧的属性过来，忽略null属性，有值的以新的为主，null的则以旧为主
+        //cn.hutool.core.bean.BeanUtil;
+        BeanUtil.copyProperties(user, user2,
+                true, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+
+        userService.updateUser(user2);
+        response.sendRedirect("/user/listPage");
     }
 
     public void checkUserName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

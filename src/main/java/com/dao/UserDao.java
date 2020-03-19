@@ -48,6 +48,32 @@ public class UserDao extends BaseDao {
         return template.queryForObject(sql, Integer.class, "%" + user.getUsername() + "%");
     }
 
+    public void updateUser(User user) {
+        String sql = "update sys_user set password=?,real_name=?,age=?,phone=?,sex=?,description=?,is_secret=?,dept_id=?,login_time=? where id=?";
+        template.update(sql,
+                user.getPassword(),
+                user.getRealName(),
+                user.getAge(),
+                user.getPhone(),
+                user.getSex(),
+                user.getDescription(),
+                user.getIsSecret(),
+                user.getDeptId(),
+                user.getLoginTime(),
+                user.getId()
+        );
+    }
+
+    public User getUserById(Integer id) {
+        String sql = "select * from sys_user where id=?";
+        return template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), id);
+    }
+
+    public void updatePic(Integer id, String pic) {
+        String sql = "update sys_user set pic=? where id=?";
+        template.update(sql, pic, id);
+    }
+
     public User getUserByName(String userName) {
         try {
             String sql = "select * from sys_user where username=?";

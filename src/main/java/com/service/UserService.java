@@ -27,6 +27,24 @@ public class UserService {
         return userDao.count(user);
     }
 
+    public void updatePic(Integer id, String pic) {
+        userDao.updatePic(id, pic);
+    }
+
+    public void updateUser(User user) {
+        userDao.updateUser(user);
+    }
+
+    /*
+     * @description 通过id查询用户
+     * @author admin
+     * @param [id]
+     * @return com.entity.User
+     */
+    public User getUserById(Integer id) {
+        return userDao.getUserById(id);
+    }
+
     /*
      * @description 根据用户名查询用户
      * @param [userName]

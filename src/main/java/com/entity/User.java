@@ -171,4 +171,28 @@ public class User extends BaseEntity {
     public void setCreateName(String createName) {
         this.createName = createName;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "createName='" + createName + '\'' +
+                ", id=" + id +
+                ", deptId=" + deptId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", qqOpenid='" + qqOpenid + '\'' +
+                ", wxOpenid='" + wxOpenid + '\'' +
+                ", realName='" + realName + '\'' +
+                ", age=" + age +
+                ", phone='" + phone + '\'' +
+                ", sex=" + sex +
+                ", description='" + description + '\'' +
+                ", registerTime='" + registerTime + '\'' +
+                ", loginTime='" + loginTime + '\'' +
+                ", pic='" + pic + '\'' +
+                ", look=" + look +
+                ", isSecret=" + isSecret +
+                '}';
+    }
 }

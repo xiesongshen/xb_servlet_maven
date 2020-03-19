@@ -18,6 +18,7 @@
     <input type="submit" value="登录">
     <a href="/register.jsp">注册账号</a>
 </form>
+
 </body>
 <script>
     function getPic() {

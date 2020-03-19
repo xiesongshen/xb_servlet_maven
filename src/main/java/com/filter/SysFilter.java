@@ -1,6 +1,7 @@
 package com.filter;
 
 import com.constants.SysConstant;
+import com.entity.User;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -47,6 +48,7 @@ public class SysFilter implements Filter {
             return;
         }
 
+        request.setAttribute("loginUser", (User) obj);
         //放行
         filterChain.doFilter(request, response);
     }
