@@ -2,6 +2,11 @@ package com.entity;
 
 public class Dept extends BaseEntity {
 
+    //创建人
+    private String createName;
+    //部门人数
+    private Integer num;
+
     private Integer id;
     private String name;
 
@@ -19,5 +24,21 @@ public class Dept extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }

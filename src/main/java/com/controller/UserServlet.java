@@ -35,7 +35,7 @@ public class UserServlet extends BaseServlet {
      * @param [request, response]
      * @return void
      */
-    public void listPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //查询条件
         String username = request.getParameter("username");
         username = username == null ? "" : username;
