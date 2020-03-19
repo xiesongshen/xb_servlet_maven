@@ -43,15 +43,25 @@
     });
 
     $(function () {
-        // $.ajax({
-        //     url: "/dept/listAll",
-        //     type: "get",
-        //     data: {},
-        //     dataType: "json",
-        //     success: function (data) {
-        //
-        //     }
-        // });
+        // 回显部门数据
+        $.ajax({
+            url: "/dept/listAll",
+            type: "get",
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                var deptId = $("#hidden-deptId").val();
+                var html = '<option>请选择</option>';
+                for (var i = 0; i < data.length; i++) {
+                    if (deptId == data[i].id) {
+                        html = html + '<option value="' + data[i].id + '" selected >' + data[i].name + '</option>';
+                    } else {
+                        html = html + '<option value="' + data[i].id + '" >' + data[i].name + '</option>';
+                    }
+                }
+                $("#dept").append(html);
+            }
+        });
     });
 </script>
 <body>
@@ -72,13 +82,20 @@
 
         真实姓名：<input type="text" name="realName" value="${user.realName}"><br><br>
 
+        <%--方式一--%>
+        <%--所属部门：--%>
+        <%--<select id="dept" name="deptId" value="">--%>
+        <%--<option>请选择</option>--%>
+        <%--<c:forEach items="${deptList}" var="dept">--%>
+        <%--<option value="${dept.id}"--%>
+        <%--<c:if test="${user.deptId==dept.id}">selected</c:if> >${dept.name}</option>--%>
+        <%--</c:forEach>--%>
+        <%--</select> <br><br>--%>
+
+        <%--方式二--%>
         所属部门：
-        <select id="dept" name="deptId" value="">
-            <option>请选择</option>
-            <c:forEach items="${deptList}" var="dept">
-                <option value="${dept.id}"
-                        <c:if test="${user.deptId==dept.id}">selected</c:if> >${dept.name}</option>
-            </c:forEach>
+        <input type="hidden" id="hidden-deptId" value="${user.deptId}">
+        <select id="dept" name="deptId">
         </select> <br><br>
 
         年龄：<input type="text" name="age" value="${user.age}"><br><br>
