@@ -22,15 +22,23 @@ public class UserServlet extends BaseServlet {
 
     private UserService userService = new UserService();
 
-    public void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    /*
+     * @description 查询用户（分页+查询条件）
+     * @author admin
+     * @date 2020/3/18
+     * @param [request, response]
+     * @return void
+     */
+    public void listPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //查询条件
         String username = request.getParameter("username");
         username = username == null ? "" : username;
-        String pageStr = request.getParameter("page");
+
         //当前页
+        String pageStr = request.getParameter("page");
         Integer pageCurrent = pageStr == null ? 1 : Integer.valueOf(pageStr);
 
-        //查询条件
+        //构造查询条件对象
         User user = new User();
         user.setUsername(username);
 
@@ -42,13 +50,20 @@ public class UserServlet extends BaseServlet {
         page.setCount(count);
 
         //数据
-        List<User> list = userService.list(user, page);
+        List<User> list = userService.listPage(user, page);
         request.setAttribute("list", list);
         request.setAttribute("user", user);
         request.setAttribute("page", page);
         request.getRequestDispatcher("/html/user/list.jsp").forward(request, response);
     }
 
+    /*
+     * @description 注册用户
+     * @author admin
+     * @date 2020/3/18
+     * @param [request, response]
+     * @return void
+     */
     public void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("username");
         String password = request.getParameter("password");

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="xb_servlet_maven@localhost" uuid="f19a57ae-74e9-4e40-a7a4-8af0b38daf5f">
+    <data-source source="LOCAL" name="xb_servlet_maven@localhost" uuid="f3c9a810-1195-43ba-8036-b443bd2982fe">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>

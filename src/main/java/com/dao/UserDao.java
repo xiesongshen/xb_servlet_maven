@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class UserDao extends BaseDao {
 
-    public List<User> list(User user, Page page) {
+    public List<User> listPage(User user, Page page) {
         String sql = "SELECT " +
                 "u.id id, " +
                 "u.dept_id deptId, " +

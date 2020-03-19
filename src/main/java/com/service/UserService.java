@@ -19,8 +19,8 @@ public class UserService {
 
     private UserDao userDao = new UserDao();
 
-    public List<User> list(User user, Page page) {
-        return userDao.list(user, page);
+    public List<User> listPage(User user, Page page) {
+        return userDao.listPage(user, page);
     }
 
     public Integer count(User user) {
