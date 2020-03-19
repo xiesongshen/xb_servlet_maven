@@ -2,28 +2,31 @@
 <html>
 <head>
     <title>登录</title>
+    <script src="${pageContext.request.contextPath}/static/js/jquery.js"></script>
 </head>
 <script>
     $(function () {
-        alert(123);
-    });
 
+    });
 </script>
 <body>
 <form action="/login/login" method="post">
     用户名：<input type="text" value="admin" name="username" id="username"><br><br>
     密码：<input type="text" value="admin" name="password" id="password"><br><br>
+
+    <img src="/img/getPic" id="img" onclick="getPic()" alt="无法加载"><br><br>
     验证码：<input type="text" name="picCode" id="picCode"><br><br>
-    <img src="/img/getPic" id="img" onclick="getPic()" alt="无法加载">
+
     <input type="submit" value="登录">
     <a href="/register.jsp">注册账号</a>
 </form>
+
+<a href="/weChart/wxLogin">微信登录</a>
 
 </body>
 <script>
     function getPic() {
         document.getElementById("img").src = document.getElementById("img").src + "?nocache=" + new Date().getTime();
     }
-
 </script>
 </html>

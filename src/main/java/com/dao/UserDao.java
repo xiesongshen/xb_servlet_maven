@@ -3,6 +3,7 @@ package com.dao;
 import com.entity.Page;
 import com.entity.User;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import java.util.Date;

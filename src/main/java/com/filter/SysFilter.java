@@ -29,13 +29,17 @@ public class SysFilter implements Filter {
         String uri = request.getRequestURI();
 
         //不需要拦截的，直接放行
-        if (uri.endsWith("/index.jsp") ||
-                uri.endsWith("/register.jsp") ||
-                uri.endsWith("register") ||
-                uri.endsWith("login") ||
-                uri.endsWith("checkUserName") ||
-                uri.endsWith("checkEmail") ||
-                uri.endsWith("getPic")) {
+        if (
+                uri.endsWith("/index.jsp") ||
+                        uri.endsWith("register.jsp") ||
+                        uri.endsWith("register") ||
+                        uri.endsWith("login") ||
+                        uri.endsWith("checkUserName") ||
+                        uri.endsWith("checkEmail") ||
+                        uri.endsWith("getPic") ||
+                        uri.endsWith("wxLogin") ||
+                        uri.endsWith("wxLoginCallBack")
+        ) {
             //放行
             filterChain.doFilter(request, response);
             return;
@@ -51,5 +55,15 @@ public class SysFilter implements Filter {
         request.setAttribute("loginUser", (User) obj);
         //放行
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
+    public void destroy() {
+
     }
 }
