@@ -16,20 +16,26 @@ import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.UUID;
 
-@WebServlet("/weChart/*")
-public class WxLoginServlet extends BaseServlet {
+/**
+ * @auth admin
+ * @date 2020/3/20 10:55
+ * @Description
+ */
+@WebServlet("/weChat/*")
+public class WeChatServlet extends BaseServlet {
 
     private LoginService loginService = new LoginService();
+
     private UserService userService = new UserService();
 
     /*
-     * @description 点击微信登录，跳转到微信授权页面
+     * @description 点击微信登录，跳转到微信授权页面,获取code
      * @author admin
-     * @date 2020/3/19
+     * @date 2020/3/20
      * @param [request, response]
      * @return void
      */
-    protected void wxLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void wxLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 加载配置文件
         Properties prop = new Properties();
         prop.load(this.getClass().getClassLoader().getResourceAsStream("config.properties"));
@@ -52,12 +58,11 @@ public class WxLoginServlet extends BaseServlet {
     /*
      * @description 处理微信回调
      * @author admin
-     * @date 2020/3/19
+     * @date 2020/3/20
      * @param [request, response]
      * @return void
      */
     protected void wxLoginCallBack(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
         // 加载配置文件
         Properties prop = new Properties();
         prop.load(this.getClass().getClassLoader().getResourceAsStream("config.properties"));
@@ -67,20 +72,18 @@ public class WxLoginServlet extends BaseServlet {
         //获取微信授权后返回的code
         String code = request.getParameter("code");
         //固定格式
-        // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId +
                 "&secret=" + appSecret +
                 "&code=" + code +
                 "&grant_type=authorization_code";
 
-        // 获取AccessToken、openid等数据
+        // 通过code获取access_token、openid等数据
         JSONObject info = loginService.getJsonObject(url);
         System.out.println("info: " + info);
 
         url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + info.getString("access_token") +
                 "&openid=" + info.getString("openid");
-
-        //获取微信的用户信息（昵称，性别，头像...）
+        //通过access_token和openid获取微信的用户信息（昵称，性别，头像...）
         JSONObject userInfo = loginService.getJsonObject(url);
         System.out.println("userInfo: " + userInfo);
 
@@ -96,7 +99,6 @@ public class WxLoginServlet extends BaseServlet {
             user.setSex(Integer.valueOf(userInfo.getString("sex")));
             // 用户的昵称
             user.setRealName(userInfo.getString("nickname"));
-
             // 随机用户名(11位随机字符串)
             user.setUsername(UUID.randomUUID().toString().substring(36 - 15));
             user.setWxOpenid(info.getString("openid"));
@@ -105,10 +107,11 @@ public class WxLoginServlet extends BaseServlet {
             user = loginService.findByWxOpenid(info.getString("openid"));
         }
 
+        HttpSession session = request.getSession();
         // 修改登录时间
         // userService.updateLoginTime(user.getId());
         session.setAttribute(SysConstant.SESSION_LOGIN_USER, user);
         response.sendRedirect("/html/common/home.jsp");
-    }
 
+    }
 }

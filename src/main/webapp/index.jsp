@@ -17,11 +17,13 @@
     <img src="/img/getPic" id="img" onclick="getPic()" alt="无法加载"><br><br>
     验证码：<input type="text" name="picCode" id="picCode"><br><br>
 
+    记住我（7天）：<input type="checkbox" name="remember" value="1"><br><br>
+
     <input type="submit" value="登录">
     <a href="/register.jsp">注册账号</a>
 </form>
 
-<a href="/weChart/wxLogin">微信登录</a>
+<a href="/weChat/wxLogin">微信登录</a>
 
 </body>
 <script>

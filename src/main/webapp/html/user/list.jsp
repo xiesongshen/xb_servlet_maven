@@ -7,10 +7,19 @@
 <%@include file="/html/common/head.jsp" %>
 <%@include file="/html/common/menu.jsp" %>
 <div id="right">
-
     <form method="post" action="/user/list">
         用户名：<input type="text" name="username" value="${user.username}">
         <input type="submit" value="查询" class="btn btn-primary">
+    </form>
+
+    <a href="/poi/userExportExcel?name=${user.username}" class="btn btn-primary">导出Excel</a>
+    <a href="/poi/userDownLoadTemplate" class="btn btn-primary">下载模板</a>
+    <br><br>
+
+    <form action="/poi/userImportExcel" method="post" enctype="multipart/form-data">
+        <%--导入数据--%>
+        <input type="file" name="userExcel">
+        <input type="submit" value="导入数据" class="btn btn-primary"/>
     </form>
 
     <table class="table table-bordered">
@@ -56,7 +65,7 @@
     <a href="/user/list?page=${page.pageCurrent-1<=0?1:page.pageCurrent-1}&username=${user.username}">上一页</a>
     <a href="/user/list?page=${page.pageCurrent+1>=page.pageCount?page.pageCount:page.pageCurrent+1}&username=${user.username}">下一页</a>
     <a href="/user/list?page=${page.pageCount}&username=${user.username}">尾页</a>
-    当前页：${page.pageCurrent},共 ${page.pageCount}页
+    当前页：${page.pageCurrent},共 ${page.pageCount}页,,共${page.count}条
 
 </div>
 </body>

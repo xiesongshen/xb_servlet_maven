@@ -6,6 +6,7 @@ import com.entity.Page;
 import com.entity.User;
 import com.service.DeptService;
 import com.service.UserService;
+import com.utils.MdUtil;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.ServletException;
@@ -77,7 +78,7 @@ public class UserServlet extends BaseServlet {
 
         User user = new User();
         user.setUsername(name);
-        user.setPassword(password);
+        user.setPassword(MdUtil.md5(password));
         user.setEmail(email);
 
         userService.add(user);
