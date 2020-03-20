@@ -78,13 +78,13 @@ public class WeChatServlet extends BaseServlet {
                 "&grant_type=authorization_code";
 
         // 通过code获取access_token、openid等数据
-        JSONObject info = loginService.getJsonObject(url);
+        JSONObject info = loginService.getJsonObjectForWx(url);
         System.out.println("info: " + info);
 
         url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + info.getString("access_token") +
                 "&openid=" + info.getString("openid");
         //通过access_token和openid获取微信的用户信息（昵称，性别，头像...）
-        JSONObject userInfo = loginService.getJsonObject(url);
+        JSONObject userInfo = loginService.getJsonObjectForWx(url);
         System.out.println("userInfo: " + userInfo);
 
         // 根据微信的openid查询此用户原来有没有使用过微信登录

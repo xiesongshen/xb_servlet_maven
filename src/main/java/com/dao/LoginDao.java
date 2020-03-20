@@ -27,4 +27,14 @@ public class LoginDao extends BaseDao {
         }
     }
 
+    public User findByQqOpenid(String qqOpenid) {
+        String sql = "select * from sys_user where qq_openid=?";
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), qqOpenid);
+        } catch (EmptyResultDataAccessException exception) {
+            // 如果是没有查询到则返回null
+            return null;
+        }
+    }
+
 }

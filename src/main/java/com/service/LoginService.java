@@ -28,16 +28,22 @@ public class LoginService {
 
     /*
      * @description 根据WxOpenid(微信登录标识符) 查询用户
-     * @author admin
-     * @date 2020/3/19
-     * @param [wxOpenid]
-     * @return com.entity.User
      */
     public User findByWxOpenid(String wxOpenid) {
         return loginDao.findByWxOpenid(wxOpenid);
     }
 
-    public JSONObject getJsonObject(String url) {
+    /*
+     * @description 根据qqOpenid(qq登录标识符) 查询用户
+     */
+    public User findByQqOpenid(String qqOpenid) {
+        return loginDao.findByQqOpenid(qqOpenid);
+    }
+
+    /*
+     * @description微信调用
+     */
+    public JSONObject getJsonObjectForWx(String url) {
         try {
             // 创建一个http Client请求
             CloseableHttpClient client = HttpClients.createDefault();
@@ -53,6 +59,77 @@ public class LoginService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 根据url通过HttpClient请求返回QQ的AccessToken
+     */
+    public String getAccessTokenForQQ(String url) {
+        String token = null;
+        try {
+            // 创建一次HttpClient请求
+            CloseableHttpClient client = HttpClients.createDefault();
+
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse response = client.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null) {
+                String result = EntityUtils.toString(entity, "UTF-8");
+                if (result.indexOf("access_token") >= 0) {
+                    String[] array = result.split("&");
+                    for (String str : array) {
+                        if (str.indexOf("access_token") >= 0) {
+                            token = str.substring(str.indexOf("=") + 1);
+                            break;
+                        }
+                    }
+                }
+            }
+            httpGet.releaseConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return token;
+    }
+
+    public String getQQOpenID(String url) throws IOException {
+        JSONObject jsonObject = null;
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(url);
+        HttpResponse response = client.execute(httpGet);
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) {
+            String result = EntityUtils.toString(entity, "UTF-8");
+            int startIndex = result.indexOf("(");
+            int endIndex = result.lastIndexOf(")");
+            String json = result.substring(startIndex + 1, endIndex);
+            jsonObject = JSONObject.parseObject(json);
+        }
+        httpGet.releaseConnection();
+        if (jsonObject != null) {
+            return jsonObject.getString("openid");
+        } else {
+            return null;
+        }
+    }
+
+    public JSONObject getUserInfoForQQ(String url) throws IOException {
+        JSONObject jsonObject = null;
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(url);
+        HttpResponse response = client.execute(httpGet);
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) {
+            String result = EntityUtils.toString(entity, "UTF-8");
+            jsonObject = JSONObject.parseObject(result);
+        }
+        httpGet.releaseConnection();
+        return jsonObject;
     }
 
 }

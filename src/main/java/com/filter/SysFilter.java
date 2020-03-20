@@ -38,7 +38,7 @@ public class SysFilter implements Filter {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (int i = 0; i < cookies.length; i++) {
-                    //如果cookie中有登录信息，则直接跳转到home.jsp
+                    //如果cookie中有登录信息，则直接跳转到home.jsp（7天免登录实现方案），否则跳转到登录界面index.jsp
                     if (SysConstant.COOKIE_LOGIN_USER.equals(cookies[i].getName())) {
                         //取出cookie中的值，并解码，得到的是json字符串
                         String strJson = URLDecoder.decode(cookies[i].getValue(), "utf-8");
@@ -51,35 +51,21 @@ public class SysFilter implements Filter {
                     }
                 }
             }
-
-            //如果没有cookie，则直接放行（去登录界面）
-            filterChain.doFilter(request, response);
-            return;
-
-        } else if (
+        } else if (uri.endsWith("register.jsp") || uri.endsWith("register") ||
+                uri.endsWith("login") || uri.endsWith("checkUserName") ||
+                uri.endsWith("checkEmail") || uri.endsWith("getPic") ||
+                uri.endsWith("qqLogin") || uri.endsWith("qqLoginCallBack") ||
+                uri.endsWith("wxLogin") || uri.endsWith("wxLoginCallBack")) {
             //不需要拦截的，直接放行
-                uri.endsWith("register.jsp") ||
-                        uri.endsWith("register") ||
-                        uri.endsWith("login") ||
-                        uri.endsWith("checkUserName") ||
-                        uri.endsWith("checkEmail") ||
-                        uri.endsWith("getPic") ||
-                        uri.endsWith("wxLogin") ||
-                        uri.endsWith("wxLoginCallBack")
-        ) {
-            //放行
-            filterChain.doFilter(request, response);
-            return;
+        } else {
+            Object obj = session.getAttribute(SysConstant.SESSION_LOGIN_USER);
+            if (obj == null) {
+                ////判断session中是否有登录信息，如果没有，则属于非法登陆，然后强制跳转到登录界面重新登录
+                response.sendRedirect("/index.jsp");
+                return;
+            }
+            request.setAttribute("loginUser", (User) obj);
         }
-
-        Object obj = session.getAttribute(SysConstant.SESSION_LOGIN_USER);
-        if (obj == null) {
-            //session中没有登录信息（非法登录）
-            response.sendRedirect("/index.jsp");
-            return;
-        }
-
-        request.setAttribute("loginUser", (User) obj);
         //放行
         filterChain.doFilter(request, response);
     }

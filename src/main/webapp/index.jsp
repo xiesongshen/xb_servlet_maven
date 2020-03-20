@@ -20,10 +20,14 @@
     记住我（7天）：<input type="checkbox" name="remember" value="1"><br><br>
 
     <input type="submit" value="登录">
-    <a href="/register.jsp">注册账号</a>
 </form>
 
 <a href="/weChat/wxLogin">微信登录</a>
+<a href="/qq/qqLogin">QQ登录</a>
+<br><br>
+
+<a href="/register.jsp">注册账号</a>
+<a href="/forget.jsp">忘记密码</a>
 
 </body>
 <script>
