@@ -54,6 +54,8 @@ public class SysFilter implements Filter {
         } else if (uri.endsWith("register.jsp") || uri.endsWith("register") ||
                 uri.endsWith("login") || uri.endsWith("checkUserName") ||
                 uri.endsWith("checkEmail") || uri.endsWith("getPic") ||
+                uri.endsWith("forget.jsp") || uri.endsWith("forgetPassword") ||
+                uri.endsWith("sendEmail") ||
                 uri.endsWith("qqLogin") || uri.endsWith("qqLoginCallBack") ||
                 uri.endsWith("wxLogin") || uri.endsWith("wxLoginCallBack")) {
             //不需要拦截的，直接放行

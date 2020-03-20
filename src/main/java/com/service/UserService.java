@@ -4,6 +4,7 @@ import com.dao.UserDao;
 import com.entity.Page;
 import com.entity.User;
 import com.utils.DateUtil;
+import com.utils.MdUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
@@ -33,21 +34,12 @@ public class UserService {
         userDao.updateUser(user);
     }
 
-    /*
-     * @description 通过id查询用户
-     * @author admin
-     * @param [id]
-     * @return com.entity.User
-     */
+    //通过id查询用户
     public User getUserById(Integer id) {
         return userDao.getUserById(id);
     }
 
-    /*
-     * @description 根据用户名查询用户
-     * @param [userName]
-     * @return com.entity.User
-     */
+    //根据用户名查询用户
     public User getUserByName(String userName) {
         if (StringUtils.isBlank(userName)) {
             return null;
@@ -62,16 +54,20 @@ public class UserService {
         return userDao.getUserByEmail(email);
     }
 
-    /*
-     * @description 添加
-     * @param [user]
-     * @return void
-     */
+    //添加
     public void add(User user) {
         user.setRegisterTime(DateUtil.getDateStr());
         user.setCreateTime(DateUtil.getDateStr());
         user.setCreateBy(null);
         userDao.add(user);
+    }
+
+    //修改密码
+    public void updatePassword(String username, String password) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(MdUtil.md5(password));
+        userDao.updatePassword(user);
     }
 
 }

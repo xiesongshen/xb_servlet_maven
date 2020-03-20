@@ -65,6 +65,11 @@ public class UserDao extends BaseDao {
         );
     }
 
+    public void updatePassword(User user) {
+        String sql = "update sys_user set password = ? where username = ? ";
+        template.update(sql, user.getPassword(), user.getUsername());
+    }
+
     public User getUserById(Integer id) {
         String sql = "select * from sys_user where id=?";
         return template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), id);

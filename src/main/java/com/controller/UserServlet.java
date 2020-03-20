@@ -2,6 +2,7 @@ package com.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.constants.SysConstant;
 import com.entity.Page;
 import com.entity.User;
 import com.service.DeptService;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -64,13 +66,7 @@ public class UserServlet extends BaseServlet {
         request.getRequestDispatcher("/html/user/list.jsp").forward(request, response);
     }
 
-    /*
-     * @description 注册用户
-     * @author admin
-     * @date 2020/3/18
-     * @param [request, response]
-     * @return void
-     */
+    //注册用户
     public void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("username");
         String password = request.getParameter("password");
@@ -87,13 +83,7 @@ public class UserServlet extends BaseServlet {
 
     }
 
-    /*
-     * @description 查看用户详情
-     * @author admin
-     * @date 2020/3/19
-     * @param [request, response]
-     * @return void
-     */
+    //查看用户详情
     public void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getParameter("id");
         User user = userService.getUserById(Integer.valueOf(id));
@@ -102,13 +92,7 @@ public class UserServlet extends BaseServlet {
         request.getRequestDispatcher("/html/user/detail.jsp").forward(request, response);
     }
 
-    /*
-     * @description 修改用户信息
-     * @author admin
-     * @date 2020/3/19
-     * @param [request, response]
-     * @return void
-     */
+    //修改用户信息
     public void updateUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
         Map<String, String[]> map = request.getParameterMap();
 
@@ -146,6 +130,28 @@ public class UserServlet extends BaseServlet {
         } else {
             out.write("500");
         }
+    }
+
+    //通过邮箱验证码修改密码
+    public void forgetPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        //前端输入的验证码
+        String code = request.getParameter("code");
+
+        HttpSession session = request.getSession();
+        //取出session中的code
+        Object object = session.getAttribute(SysConstant.SESSION_EMAIL_CODE_NAME);
+
+        //比较前端输入的code和session中的code
+        if (object == null || !code.equals(object.toString())) {
+            response.sendRedirect("/forget.jsp");
+            return;
+        }
+        userService.updatePassword(username, password);
+        //修改完毕，跳转到登录界面
+        response.sendRedirect("/index.jsp");
+
     }
 
 }
