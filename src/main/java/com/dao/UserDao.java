@@ -139,4 +139,16 @@ public class UserDao extends BaseDao {
         return template.query(sql, new BeanPropertyRowMapper<>(User.class), "%" + user.getUsername() + "%");
     }
 
+    public List<User> findUserByDeptId(Integer deptId) {
+        String sql = "SELECT " +
+                "u.id id, " +
+                "u.dept_id deptId, " +
+                "u.username username, " +
+                "u.real_name realName " +
+                "FROM " +
+                "sys_user u " +
+                "where u.dept_id = ? ";
+        return template.query(sql, new BeanPropertyRowMapper<>(User.class), deptId);
+    }
+
 }

@@ -2,7 +2,9 @@ package com.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.alibaba.fastjson.JSON;
 import com.constants.SysConstant;
+import com.entity.Dept;
 import com.entity.Page;
 import com.entity.User;
 import com.service.DeptService;
@@ -152,6 +154,16 @@ public class UserServlet extends BaseServlet {
         //修改完毕，跳转到登录界面
         response.sendRedirect("/index.jsp");
 
+    }
+
+    /**
+     * 通过deptId查询某个部门下的所有员工
+     */
+    public void findUserByDeptId(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String deptIdStr = request.getParameter("deptId");
+        List<User> list = userService.findUserByDeptId(Integer.valueOf(deptIdStr));
+        PrintWriter out = response.getWriter();
+        out.write(JSON.toJSONString(list));
     }
 
 }

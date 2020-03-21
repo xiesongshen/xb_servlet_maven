@@ -4,7 +4,16 @@
 <c:set var="path" value="${pageContext.request.contextPath}"></c:set>
 
 <link rel="stylesheet" href="${path}/static/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" href="${path}/static/bootstrap/css/bootstrap-switch.min.css">
+<link rel="stylesheet" href="${path}/static/bootstrap/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="${path}/static/bootstrap/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="${path}/static/bootstrap/css/bootstrap-datetimepicker.css">
 
 <script src="${path}/static/js/jquery.js"></script>
 <script src="${path}/static/bootstrap/js/bootstrap.js"></script>
+<script src="${path}/static/bootstrap/js/bootstrap-select.min.js"></script>
+<script src="${path}/static/bootstrap/js/bootstrap-switch.min.js"></script>
+<script src="${path}/static/bootstrap/js/bootstrap-datepicker.min.js"></script>
+<script src="${path}/static/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
+<script src="${path}/static/bootstrap/js/bootstrap-collapse.js"></script>
 <script src="${path}/static/jquery-validation-1.9.0/jquery.validate.js"></script>

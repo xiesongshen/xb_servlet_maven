@@ -70,4 +70,11 @@ public class UserService {
         userDao.updatePassword(user);
     }
 
+    /**
+     * 根据部门id查询部门的所属用户
+     */
+    public List<User> findUserByDeptId(Integer deptId) {
+        return userDao.findUserByDeptId(deptId);
+    }
+
 }
