@@ -2,6 +2,7 @@ package com.dao;
 
 import com.entity.Meeting;
 import com.entity.Page;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
@@ -47,12 +48,11 @@ public class MeetingDao extends BaseDao {
             }
             return template.queryForObject(sql, Integer.class, "%" + meeting.getTitle() + "%");
         } catch (EmptyResultDataAccessException e) {
-            e.printStackTrace();
             return 0;
         }
     }
 
-    public Meeting getMeetingById(long id) {
+    public Meeting getMeetingById(Integer id) {
         String sql = "SELECT " +
                 "m.* , " +
                 "d.name deptName " +
@@ -85,39 +85,41 @@ public class MeetingDao extends BaseDao {
     }
 
     public Integer getMeetingCountByMeetingId(Integer meetingId) {
-        String sql = "select count(1) from meeting_join where meeting_id=?";
+        String sql = "select count(1) from meeting_join where meeting_id= ? ";
         try {
             return template.queryForObject(sql, Integer.class, meetingId);
-        } catch (EmptyResultDataAccessException exception) {
-            // 如果是没有查询到则返回null
+        } catch (DataAccessException e) {
             return 0;
         }
     }
 
     public Integer checkJoinMeeting(Integer userId, Integer meetingId) {
-        String sql = "select count(1) from meeting_join where user_id=? and meeting_id=?";
+        String sql = "select count(1) from meeting_join where user_id = ? and meeting_id = ? ";
         try {
             return template.queryForObject(sql, Integer.class, userId, meetingId);
-        } catch (EmptyResultDataAccessException exception) {
-            // 如果是没有查询到则返回0
+        } catch (DataAccessException e) {
             return 0;
         }
     }
 
-    /**
-     * 参加会议
-     */
     public void joinMeeting(Integer userId, Integer meetingId) {
-        String sql = "insert into meeting_join(meeting_id,user_id) values(?,?)";
+        String sql = "insert into meeting_join(meeting_id, user_id) values (?,?)";
         template.update(sql, meetingId, userId);
     }
 
-    /**
-     * 取消会议
-     */
     public void unJoinMeeting(Integer userId, Integer meetingId) {
-        String sql = "delete from meeting_join where meeting_id=? and user_id=?";
+        String sql = "delete from meeting_join where meeting_id = ? and user_id = ?";
         template.update(sql, meetingId, userId);
+    }
+
+    public List<Meeting> listAll() {
+        String sql = "select * from meeting";
+        return template.query(sql, new BeanPropertyRowMapper<>(Meeting.class));
+    }
+
+    public void updateStatus(Integer meetingId, Integer status) {
+        String sql = "update meeting set status = ? where id = ?";
+        template.update(sql, status, meetingId);
     }
 
 }

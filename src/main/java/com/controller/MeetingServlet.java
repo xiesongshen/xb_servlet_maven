@@ -14,13 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @auth admin
  * @date 2020/3/17 16:34
- * @Description
+ * @Description 会议(meeting) 控制层
  */
 @WebServlet("/meeting/*")
 public class MeetingServlet extends BaseServlet {
@@ -84,54 +85,77 @@ public class MeetingServlet extends BaseServlet {
     /*
      * @description 会议详情
      * @author admin
-     * @date 2020/3/21
+     * @date 2020/3/23
      * @param [request, response]
      * @return void
      */
-    public void getMeetingById(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void getMeetingById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
+        Map<String, Object> map = new HashMap<>();
         String idStr = request.getParameter("id");
         if (StringUtils.isBlank(idStr)) {
             return;
         }
         Integer meetingId = Integer.valueOf(idStr);
         Meeting meeting = meetingService.getMeetingById(meetingId);
+
         //应到人数
         String[] shoulds = meeting.getMakeUser().split(",");
-        // 实到人数
+        //实到人数
         Integer realCount = meetingService.getMeetingCountByMeetingId(meetingId);
-        // 查看我是否有参加过这个会议
-        boolean flag = meetingService.checkJoinMeeting(loginUser.getId(), meetingId) > 0 ? true : false;
+
+        //第一步：判断当前登录人是否需要参加会议
+        boolean isNeedJoin = meeting.getMakeUser().contains(loginUser.getId().toString());
+
+        //第二部：如果需要参加会议，则判断是否已经参加会议
+        if (isNeedJoin) {
+            // isNeedJoin：1需要参加会议 ，2不需要参加会议
+            map.put("isNeedJoin", 1);
+            // flag :1已经参加会议，2未参加会议
+            map.put("flag", meetingService.checkJoinMeeting(loginUser.getId(), meetingId));
+        } else {
+            map.put("isNeedJoin", 2);
+        }
+
+        //应到人数
+        map.put("shoulds", shoulds.length);
+        //实到人数
+        map.put("realCount", realCount);
 
         request.setAttribute("meeting", meeting);
-        request.setAttribute("shoulds", shoulds.length);
-        request.setAttribute("realCount", realCount);
-        request.setAttribute("flag", flag);
+        request.setAttribute("map", map);
         request.getRequestDispatcher("/html/meeting/detail.jsp").forward(request, response);
     }
 
-    /**
-     * 参加会议
+    /*
+     * @description 参加会议
+     * @author admin
+     * @date 2020/3/23
+     * @param [request, response]
+     * @return void
      */
-    public void joinMeeting(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void joinMeeting(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
         String idStr = request.getParameter("id");
         if (StringUtils.isBlank(idStr)) {
             return;
         }
-        Integer meetingId = Integer.valueOf(idStr);
-        meetingService.joinMeeting(loginUser.getId(), meetingId);
-        response.sendRedirect("/meeting/getMeetingById?id=" + meetingId);
+        meetingService.joinMeeting(loginUser.getId(), Integer.valueOf(idStr));
+        response.sendRedirect("/meeting/getMeetingById?id=" + Integer.valueOf(idStr));
     }
 
-    /**
-     * 取消会议
+    /*
+     * @description 取消会议
+     * @author admin
+     * @date 2020/3/23
+     * @param [request, response]
+     * @return void
      */
-    public void unJoinMeeting(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void unJoinMeeting(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
         String idStr = request.getParameter("id");
         if (StringUtils.isBlank(idStr)) {
             return;
         }
-        Integer meetingId = Integer.valueOf(idStr);
-        meetingService.unJoinMeeting(loginUser.getId(), meetingId);
-        response.sendRedirect("/meeting/getMeetingById?id=" + meetingId);
+        meetingService.unJoinMeeting(loginUser.getId(), Integer.valueOf(idStr));
+        response.sendRedirect("/meeting/getMeetingById?id=" + Integer.valueOf(idStr));
     }
+
 }
