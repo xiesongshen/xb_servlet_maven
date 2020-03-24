@@ -19,7 +19,7 @@ import java.net.URLDecoder;
  * @date 2020/3/17 16:36
  * @Description
  */
-@WebFilter("/*")
+//@WebFilter("/*")
 public class SysFilter implements Filter {
 
     @Override

@@ -20,4 +20,20 @@ public class ProductDao extends BaseDao {
         return template.update(sql, name);
     }
 
+    public int updateStock4(String name, Integer version) {
+        String sql = "update product set stock=stock-1,version=version+1 where name= ? and version = ? ";
+        return template.update(sql, name, version);
+    }
+
+    public Product getByName5(Integer id) {
+        //锁行
+        String sql = "select * from product where id=? for update";
+        return template.queryForObject(sql, new BeanPropertyRowMapper<>(Product.class), id);
+    }
+
+    public int updateStock5(Integer id) {
+        String sql = "update product set stock=stock-1,version=version+1 where id= ? and stock > 0 ";
+        return template.update(sql, id);
+    }
+
 }
